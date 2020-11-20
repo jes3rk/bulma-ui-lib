@@ -1,3 +1,1 @@
-declare const hello: () => string;
-
-export { hello };
+export { Input } from './Input';
