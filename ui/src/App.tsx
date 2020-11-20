@@ -1,8 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import {hello} from 'bulma-ui-lib';
 
 function App() {
+  const h = hello();
   return (
     <div className="App">
       <header className="App-header">
