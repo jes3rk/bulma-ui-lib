@@ -3,8 +3,8 @@ import dts from 'rollup-plugin-dts';
 export default [{
         input: 'dist/index.js',
         output: {
-            file: 'lib/index.js'
-        },
+            dir: 'lib'
+        }
     }, {
         input: 'dist/index.d.ts',
         output: {
