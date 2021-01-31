@@ -1,8 +1,8 @@
 import * as React from "react";
 import { BaseHTMLProps, stringPropDefaulter } from "../BaseElements";
 
-interface ColProps extends BaseHTMLProps {
-  children: JSX.Element | JSX.Element[];
+export interface ColProps extends BaseHTMLProps {
+  children?: JSX.Element | JSX.Element[];
 }
 
 export const Column = (props: ColProps): JSX.Element => {
@@ -11,8 +11,8 @@ export const Column = (props: ColProps): JSX.Element => {
   return <div>{props.children}</div>;
 };
 
-interface ColumnContainerProps extends BaseHTMLProps {
-  children: JSX.Element | JSX.Element[];
+export interface ColumnContainerProps extends BaseHTMLProps {
+  children?: JSX.Element | JSX.Element[];
 }
 
 export const ColumnContainer = (props: ColumnContainerProps): JSX.Element => {

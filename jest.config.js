@@ -9,6 +9,10 @@ module.exports = {
       statements: 100,
     },
   },
+  collectCoverageFrom: [
+    "src/**/*.{ts,tsx}",
+    "!src/**/*.stories.{js,ts,jsx,tsx}",
+  ],
   transform: {
     "^.+\\.tsx?$": "ts-jest",
   },
