@@ -1,11 +1,11 @@
-import * as React from 'react';
-import { exists } from './publicUtilities';
+import * as React from "react";
+import { exists } from "./publicUtilities";
 
 export interface BaseHTMLProps {
-    'aria-label'?: string;
-    className?: string;
-    name?: string;
-    title?: string;
+  "aria-label"?: string;
+  className?: string;
+  name?: string;
+  title?: string;
 }
 
 /**
@@ -14,4 +14,8 @@ export interface BaseHTMLProps {
  * @param defaultValue Default value to prepend
  * @returns Finished string
  */
-export const stringPropDefaulter = (stringProp: string | undefined, defaultValue: string): string => exists(stringProp) ? `${defaultValue} ${stringProp}` : defaultValue;
+export const stringPropDefaulter = (
+  stringProp: string | undefined,
+  defaultValue: string
+): string =>
+  exists(stringProp) ? `${defaultValue} ${stringProp}` : defaultValue;
