@@ -1,6 +1,6 @@
 import * as React from "react";
 import { cleanup, render } from "@testing-library/react";
-import { Input } from "../src/Input";
+import { Input, TextInput } from "../src/Input";
 
 describe("Testing the base input", () => {
     afterEach(() => {
@@ -19,3 +19,19 @@ describe("Testing the base input", () => {
         expect(getByTestId(testid)).toHaveAttribute('class', expect.stringContaining(className));
     })
 });
+describe('Testing the TextInput', () => {
+    afterEach(() => {
+        cleanup();
+    })
+    it('renders an input element with a type of "text"', () => {
+        const testID = 'hello world';
+        const { getByTestId } = render(<TextInput data-testid={testID} />);
+        expect(getByTestId(testID)).toBeInTheDocument();
+        expect(getByTestId(testID)).toHaveAttribute('type', 'text');
+    })
+    it('renders an input element with a type of "password"', () => {
+        const testID = 'hello world';
+        const { getByTestId } = render(<TextInput data-testid={testID} type='password'/>);
+        expect(getByTestId(testID)).toHaveAttribute('type', 'password');
+    })
+})
