@@ -3,20 +3,32 @@ import { cleanup, render } from "@testing-library/react";
 import { Input, TextInput } from "../src/Input";
 
 describe("Testing the base input", () => {
+    const testid = "Hello world";
     afterEach(() => {
         cleanup();
     });
     it("renders an input element with a class of \"input\"", () => {
-        const testid = "Hello world";
         const { getByTestId } = render(<Input data-testid={testid} />);
         expect(getByTestId(testid)).toBeInTheDocument();
         expect(getByTestId(testid)).toHaveAttribute('class', 'input');
     });
     it('renders an input with a passed classname', () => {
-        const testid = "Hello world";
         const className = "newClass";
         const { getByTestId } = render(<Input className={className} data-testid={testid} />);
         expect(getByTestId(testid)).toHaveAttribute('class', expect.stringContaining(className));
+    })
+    it('will render an aria-label if given a name', () => {
+        const name = 'My name';
+        const { getByTestId } = render(<Input data-testid={testid} name={name} />);
+        expect(getByTestId(testid)).toHaveAttribute('name', name);
+        expect(getByTestId(testid)).toHaveAttribute('aria-label', name);
+    })
+    it('will render an aria-label if given an aria-label', () => {
+        const name = 'My name';
+        const label = 'My label';
+        const { getByTestId } = render(<Input aria-label={label} data-testid={testid} name={name} />);
+        expect(getByTestId(testid)).toHaveAttribute('name', name);
+        expect(getByTestId(testid)).toHaveAttribute('aria-label', label);
     })
 });
 describe('Testing the TextInput', () => {

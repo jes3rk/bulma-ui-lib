@@ -15,6 +15,7 @@ export interface InputProps extends BaseHTMLProps, EditableProps {
 export const Input = (props: InputProps): JSX.Element => {
   const _props = {...props};
   _props.className = stringPropCombineDefaulter(_props.className, 'input');
+  _props["aria-label"] = propDefaulter(_props["aria-label"], props.name);
   return <input {..._props} />;
 };
 
