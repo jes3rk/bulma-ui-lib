@@ -1,5 +1,5 @@
 import * as React from "react";
-import { BaseHTMLProps } from "./BaseElements";
+import { BaseHTMLProps, stringPropDefaulter } from "./BaseElements";
 
 export interface InputProps extends BaseHTMLProps {
   type?: "number" | "password" | "text";
@@ -7,5 +7,7 @@ export interface InputProps extends BaseHTMLProps {
 }
 
 export const Input = (props: InputProps): JSX.Element => {
-  return <input {...props} />;
+  const _props = {...props};
+  _props.className = stringPropDefaulter(_props.className, 'input');
+  return <input {..._props} />;
 };

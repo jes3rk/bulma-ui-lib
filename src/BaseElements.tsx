@@ -4,6 +4,7 @@ import { exists } from "./publicUtilities";
 export interface BaseHTMLProps {
   "aria-label"?: string;
   className?: string;
+  "data-testid"?: string;
   name?: string;
   title?: string;
 }
