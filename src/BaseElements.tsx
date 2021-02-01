@@ -1,6 +1,5 @@
-import { prependOnceListener } from "process";
 import * as React from "react";
-import { exists } from "./publicUtilities";
+import { exists, ifElseBlank } from "./publicUtilities";
 
 /**
  * Properties shared amongst all HTML elements
@@ -21,19 +20,25 @@ export interface EditableProps {
   readonly?: boolean;
 }
 
-
+/**
+ * Wrapper for generic input fields
+ * @param children Field to be controlled
+ * @param horizontal Label position is horizontal -- Defaults to false
+ * @param name Label name
+ * @returns
+ */
 export const ControlField = ({
   children,
-  horizontal,
+  horizontal = false,
   name
 }: {
   children: JSX.Element | JSX.Element[];
-  horizontal: boolean;
+  horizontal?: boolean;
   name: string;
 }): JSX.Element => {
   const _label = <label className='label'>{name}</label>
   return (
-    <div className={`field ${horizontal && 'is-horizontal'}`}>
+    <div className={`field ${ifElseBlank(horizontal, 'is-horizontal')}`}>
       {horizontal ? <div className='field-label is-normal'>{_label}</div> : _label}
       <div className='field-body'>
         <div className='control'>
