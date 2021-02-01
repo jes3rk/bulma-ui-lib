@@ -3,10 +3,11 @@ import { Meta, Story } from "@storybook/react/types-6-0";
 import { ColumnContainer, ColumnContainerProps } from "./Columns";
 
 export default {
-  title: "Layout/Columns",
+  title: "Layout/Column Container",
   component: ColumnContainer,
 } as Meta;
 
-export const Container: Story<ColumnContainerProps> = () => (
-  <ColumnContainer></ColumnContainer>
+export const Base: Story<ColumnContainerProps> = (args) => (
+  <ColumnContainer {...args}></ColumnContainer>
 );
+Base.storyName = 'Column Container';

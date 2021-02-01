@@ -8,7 +8,7 @@ export interface ColProps extends BaseHTMLProps {
 export const Column = (props: ColProps): JSX.Element => {
   const _props: ColumnContainerProps = { ...props };
   _props.className = stringPropCombineDefaulter(_props.className, "column");
-  return <div>{props.children}</div>;
+  return <div {..._props}>{props.children}</div>;
 };
 
 export interface ColumnContainerProps extends BaseHTMLProps {
