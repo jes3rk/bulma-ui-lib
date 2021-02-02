@@ -12,6 +12,8 @@ export interface BaseHTMLProps {
   title?: string;
 }
 
+type _sizes = "small" | "medium" | "large" | "normal";
+
 /**
  * Properties shared amongst editable/interactable elements
  */
@@ -19,14 +21,16 @@ export interface EditableProps {
   disabled?: boolean;
   readonly?: boolean;
   rounded?: boolean;
+  isSize?: _sizes;
 }
 
 /**
  * Wrapper for generic input fields
  * @param children Field to be controlled
  * @param horizontal Label position is horizontal -- Defaults to false
+ * @param loading Adds rotating graphic to input -- Defaults to false
  * @param name Label name
- * @returns
+ * @param size Change the size -- "small" | "medium" | "large" | "normal"
  */
 export const ControlField = ({
   children,
@@ -39,7 +43,7 @@ export const ControlField = ({
   horizontal?: boolean;
   loading?: boolean;
   name: string;
-  size?: "small" | "medium" | "large";
+  size?: _sizes;
 }): JSX.Element => {
   const _label = <label className='label'>{name}</label>
   return (
