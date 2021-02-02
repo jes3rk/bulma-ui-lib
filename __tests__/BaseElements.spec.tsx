@@ -30,7 +30,7 @@ describe('Testing the ControlField wrapper', () => {
                   class="field-body"
                 >
                   <div
-                    class="control "
+                    class="control  "
                   >
                     <span>
                       Hello World
@@ -65,7 +65,7 @@ describe('Testing the ControlField wrapper', () => {
                   class="field-body"
                 >
                   <div
-                    class="control "
+                    class="control  "
                   >
                     <span>
                       Hello World
@@ -96,7 +96,7 @@ describe('Testing the ControlField wrapper', () => {
                   class="field-body"
                 >
                   <div
-                    class="control is-loading"
+                    class="control is-loading "
                   >
                     <span>
                       Hello World
