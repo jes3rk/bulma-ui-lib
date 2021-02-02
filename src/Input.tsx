@@ -24,6 +24,7 @@ export const Input = (props: InputProps): JSX.Element => {
 
 export interface TextInputProps extends InputProps {
   horizontal?: boolean
+  loading?: boolean;
   type?: 'text'|'password';
 }
 
@@ -37,6 +38,7 @@ export const TextInput = (props: TextInputProps): JSX.Element => {
   return (
     <ControlField
       horizontal={_props.horizontal}
+      loading={props.loading}
       name={_props.name}
     >
       <Input {..._props} />

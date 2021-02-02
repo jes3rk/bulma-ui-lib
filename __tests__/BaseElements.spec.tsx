@@ -30,7 +30,7 @@ describe('Testing the ControlField wrapper', () => {
                   class="field-body"
                 >
                   <div
-                    class="control"
+                    class="control "
                   >
                     <span>
                       Hello World
@@ -65,7 +65,38 @@ describe('Testing the ControlField wrapper', () => {
                   class="field-body"
                 >
                   <div
-                    class="control"
+                    class="control "
+                  >
+                    <span>
+                      Hello World
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </DocumentFragment>
+        `)
+    })
+    it('will match the inline snapshot when loading', () => {
+        const { asFragment } = render(
+            <ControlField loading={true} name="testing">
+                <span>Hello World</span>
+            </ControlField>
+        )
+        expect(asFragment()).toMatchInlineSnapshot(`
+            <DocumentFragment>
+              <div
+                class="field "
+              >
+                <label
+                  class="label"
+                >
+                  testing
+                </label>
+                <div
+                  class="field-body"
+                >
+                  <div
+                    class="control is-loading"
                   >
                     <span>
                       Hello World

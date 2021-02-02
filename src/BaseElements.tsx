@@ -31,18 +31,22 @@ export interface EditableProps {
 export const ControlField = ({
   children,
   horizontal = false,
-  name
+  loading = false,
+  name,
+  size,
 }: {
   children: JSX.Element | JSX.Element[];
   horizontal?: boolean;
+  loading?: boolean;
   name: string;
+  size?: "small" | "medium" | "large";
 }): JSX.Element => {
   const _label = <label className='label'>{name}</label>
   return (
     <div className={`field ${ifElseBlank(horizontal, 'is-horizontal')}`}>
       {horizontal ? <div className='field-label is-normal'>{_label}</div> : _label}
       <div className='field-body'>
-        <div className='control'>
+        <div className={`control ${ifElseBlank(loading, 'is-loading')} ${ifElseBlank(exists(size), `is-${size}`)}`}>
           {children}
         </div>
       </div>
