@@ -1,6 +1,8 @@
 import * as React from "react";
+import * as ReactDOMServer from 'react-dom/server';
 import { cleanup, render } from "@testing-library/react";
 import { Input, TextInput } from "../src/Input";
+import { axe } from "jest-axe";
 
 describe("Testing the base input", () => {
     const testid = "Hello world";
@@ -30,6 +32,10 @@ describe("Testing the base input", () => {
         expect(getByTestId(testid)).toHaveAttribute('name', name);
         expect(getByTestId(testid)).toHaveAttribute('aria-label', label);
     })
+    it('will include a class of "is-rounded" if property is passed in', () => {
+        const { getByTestId } = render(<Input data-testid={testid} rounded={true} />);
+        expect(getByTestId(testid)).toHaveAttribute('class', expect.stringContaining('is-rounded'));
+    })
 });
 describe('Testing the TextInput', () => {
     afterEach(() => {
@@ -45,5 +51,12 @@ describe('Testing the TextInput', () => {
         const testID = 'hello world';
         const { getByTestId } = render(<TextInput data-testid={testID} type='password'/>);
         expect(getByTestId(testID)).toHaveAttribute('type', 'password');
+    })
+    it('is nominally accessible as a text input', done => {
+        const html = ReactDOMServer.renderToString(<main><TextInput name='accessable-input' /></main>);
+        axe(html).then(res => {
+            expect(res).toHaveNoViolations();
+            done();
+        })
     })
 })

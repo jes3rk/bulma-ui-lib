@@ -1,5 +1,6 @@
 import * as React from "react";
 import { BaseHTMLProps, ControlField, EditableProps, propDefaulter, stringPropCombineDefaulter } from "./BaseElements";
+import { ifElseBlank } from "./publicUtilities";
 
 export interface InputProps extends BaseHTMLProps, EditableProps {
   placeholder?: string;
@@ -14,8 +15,10 @@ export interface InputProps extends BaseHTMLProps, EditableProps {
  */
 export const Input = (props: InputProps): JSX.Element => {
   const _props = {...props};
+  _props.className = stringPropCombineDefaulter(_props.className, ifElseBlank(props.rounded, 'is-rounded'));
   _props.className = stringPropCombineDefaulter(_props.className, 'input');
   _props["aria-label"] = propDefaulter(_props["aria-label"], props.name);
+  delete _props.rounded;
   return <input {..._props} />;
 };
 

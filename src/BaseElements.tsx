@@ -18,6 +18,7 @@ export interface BaseHTMLProps {
 export interface EditableProps {
   disabled?: boolean;
   readonly?: boolean;
+  rounded?: boolean;
 }
 
 /**
@@ -62,7 +63,7 @@ export const propDefaulter = function<T>(
 
 /**
  * Automatically prepend a default value to a string property
- * @param stringProp Exisitng property, may or may not exist
+ * @param stringProp Exisitng property, may or may not exist. Will also reject an empty string.
  * @param defaultValue Default value to prepend
  * @returns Finished string
  */
@@ -70,4 +71,4 @@ export const stringPropCombineDefaulter = (
   stringProp: string | undefined,
   defaultValue: string
 ): string =>
-  exists(stringProp) ? `${defaultValue} ${stringProp}` : defaultValue;
+  (exists(stringProp) && stringProp !== '') ? `${defaultValue} ${stringProp}` : defaultValue;
