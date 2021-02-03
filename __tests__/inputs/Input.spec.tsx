@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOMServer from 'react-dom/server';
 import { cleanup, render } from "@testing-library/react";
-import { Input, TextInput } from "../src/Input";
+import { Input, TextInput } from "../../src/inputs/Input";
 import { axe } from "jest-axe";
 
 describe("Testing the base input", () => {

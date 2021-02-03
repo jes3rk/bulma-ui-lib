@@ -1,6 +1,6 @@
 import * as React from "react";
-import { BaseHTMLProps, ControlField, EditableProps, propDefaulter, stringPropCombineDefaulter } from "./BaseElements";
-import { exists, ifElseBlank } from "./publicUtilities";
+import { BaseHTMLProps, ControlField, EditableProps, propDefaulter, stringPropCombineDefaulter } from "../BaseElements";
+import { exists, ifElseBlank } from "../publicUtilities";
 
 export interface InputProps extends BaseHTMLProps, EditableProps {
   placeholder?: string;
