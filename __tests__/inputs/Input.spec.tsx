@@ -1,8 +1,10 @@
 import * as React from "react";
 import * as ReactDOMServer from 'react-dom/server';
-import { cleanup, render } from "@testing-library/react";
+import { cleanup, render, waitFor } from "@testing-library/react";
 import { Input, TextInput } from "../../src/inputs/Input";
 import { axe } from "jest-axe";
+import userEvent from '@testing-library/user-event';
+import Interactable from "../../src/Interactions";
 
 describe("Testing the base input", () => {
     const testid = "Hello world";
@@ -35,6 +37,46 @@ describe("Testing the base input", () => {
     it('will include a class of "is-rounded" if property is passed in', () => {
         const { getByTestId } = render(<Input data-testid={testid} rounded={true} />);
         expect(getByTestId(testid)).toHaveAttribute('class', expect.stringContaining('is-rounded'));
+    })
+    it('will run an onClick event if clicked', done => {
+        const clicker = jest.fn();
+        const { getByTestId } = render(<Input data-testid={testid} onClick={clicker}/>);
+        userEvent.click(getByTestId(testid));
+        waitFor(() => {
+            expect(clicker).toHaveBeenCalled();
+            done()
+        })
+    })
+    it('will run an onKeyDown event if a key is pressed', done => {
+        const clicker = jest.fn();
+        const { getByTestId } = render(<Input data-testid={testid} onKeyDown={clicker}/>);
+        userEvent.type(getByTestId(testid), '{enter}');
+        waitFor(() => {
+            expect(clicker).toHaveBeenCalled();
+            done()
+        })
+    })
+    it('will run an onKeyUp event if clicked', done => {
+        const clicker = jest.fn();
+        const { getByTestId } = render(<Input data-testid={testid} onKeyUp={clicker}/>);
+        userEvent.type(getByTestId(testid), '{enter}');
+        waitFor(() => {
+            expect(clicker).toHaveBeenCalled();
+            done()
+        })
+    })
+    it('will use an actor rather than an included on click function', done => {
+        const actor = new Interactable();
+        const actorClicker = jest.fn();
+        const onClicker = jest.fn();
+        actor.registerClickFunction(actorClicker);
+        const { getByTestId } = render(<Input data-testid={testid} actor={actor} onClick={onClicker}/>);
+        userEvent.click(getByTestId(testid));
+        waitFor(() => {
+            expect(actorClicker).toHaveBeenCalled();
+            expect(onClicker).not.toHaveBeenCalled();
+            done()
+        })
     })
 });
 describe('Testing the TextInput', () => {

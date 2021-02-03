@@ -10,6 +10,7 @@ type KeyEventOptions = {
  * Class to handle HTML Element interactions
  */
 export default class Interactable {
+    public static ALL_LISTENERS: string[] = ['onClick', 'onKeyDown', 'onKeyUp']
     private _interactionTracker: Map<string, (e: React.SyntheticEvent) => void>;
     private keyEventOptions: KeyEventOptions = {
         ctrlOrMeta: false,
@@ -44,7 +45,6 @@ export default class Interactable {
             params.push(synthE.metaKey||synthE.ctrlKey);
             params.push(synthE.shiftKey);
         }
-        
         const name = this._generateEventName(...params);
         if (this._interactionTracker.has(name)) this._interactionTracker.get(name)(e);
     }

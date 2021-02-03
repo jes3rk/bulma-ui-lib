@@ -1,4 +1,5 @@
 import * as React from "react";
+import Interactable from "./Interactions";
 import { exists, ifElseBlank } from "./publicUtilities";
 
 /**
@@ -18,7 +19,11 @@ type _sizes = "small" | "medium" | "large" | "normal";
  * Properties shared amongst editable/interactable elements
  */
 export interface EditableProps {
+  actor?: Interactable;
   disabled?: boolean;
+  onClick?: <T extends HTMLElement>(e: React.MouseEvent<T>) => void;
+  onKeyDown?: <T extends HTMLElement>(e: React.KeyboardEvent<T>) => void;
+  onKeyUp?: <T extends HTMLElement>(e: React.KeyboardEvent<T>) => void;
   readonly?: boolean;
   rounded?: boolean;
   isSize?: _sizes;

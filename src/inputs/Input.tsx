@@ -1,5 +1,6 @@
 import * as React from "react";
 import { BaseHTMLProps, ControlField, EditableProps, propDefaulter, stringPropCombineDefaulter } from "../BaseElements";
+import Interactable from "../Interactions";
 import { exists, ifElseBlank } from "../publicUtilities";
 
 export interface InputProps extends BaseHTMLProps, EditableProps {
@@ -14,7 +15,7 @@ export interface InputProps extends BaseHTMLProps, EditableProps {
  * @returns JSX input element
  */
 export const Input = (props: InputProps): JSX.Element => {
-  const _props = {...props};
+  const _props = {...props, ...(exists(props.actor) ? props.actor.multiListener(...Interactable.ALL_LISTENERS) : {})};
   _props.className = stringPropCombineDefaulter(_props.className, ifElseBlank(props.rounded, 'is-rounded'));
   _props.className = stringPropCombineDefaulter(_props.className, `${ifElseBlank(exists(_props.isSize), `is-${_props.isSize}`)}`)
   _props.className = stringPropCombineDefaulter(_props.className, 'input');
