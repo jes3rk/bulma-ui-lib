@@ -13,6 +13,25 @@ export interface BaseHTMLProps {
   title?: string;
 }
 
+
+export interface BaseLayoutProps extends BaseHTMLProps {
+  children?: JSX.Element | JSX.Element[];
+}
+
+type BasicLayoutTypes = 'column' | 'columns' | 'container';
+
+/**
+ * Internal class for basic layout components. Should cover most situations for a simple layout type
+ * @param props 
+ * @param type 
+ * @returns
+ */
+export const BasicLayout = (props: BaseLayoutProps, type: BasicLayoutTypes): JSX.Element => {
+  const _props = {...props};
+  _props.className = stringPropCombineDefaulter(_props.className, type);
+  return <div {..._props}>{_props.children}</div>;
+}
+
 type _sizes = "small" | "medium" | "large" | "normal";
 
 /**
