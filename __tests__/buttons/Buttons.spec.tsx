@@ -1,6 +1,6 @@
 import * as React from "react"
 import * as ReactDOMServer from "react-dom/server"
-import { fireEvent, render, cleanup } from "@testing-library/react"
+import { fireEvent, render, cleanup, waitFor } from "@testing-library/react"
 import "@testing-library/jest-dom/extend-expect"
 import { axe, toHaveNoViolations } from "jest-axe"
 import {
@@ -8,6 +8,8 @@ import {
 	PrimaryButton,
 	SecondaryButton,
 } from "../../src/buttons/Button"
+import Interactable from "../../src/Interactions"
+import userEvent from "@testing-library/user-event"
 
 expect.extend(toHaveNoViolations)
 
@@ -114,6 +116,23 @@ describe("Testing the Base Button component", () => {
 		)
 		const results = await axe(html)
 		expect(results).toHaveNoViolations()
+	})
+	it("will use an actor rather than an included on click function", (done) => {
+		const actor = new Interactable()
+		const actorClicker = jest.fn()
+		const onClicker = jest.fn()
+		actor.registerClickFunction(actorClicker)
+		const { getByTestId } = render(
+			<Button data-testid={testId} actor={actor} onClick={onClicker}>
+				Hello
+			</Button>
+		)
+		userEvent.click(getByTestId(testId))
+		waitFor(() => {
+			expect(actorClicker).toHaveBeenCalled()
+			expect(onClicker).not.toHaveBeenCalled()
+			done()
+		})
 	})
 })
 describe("Testing other buttons", () => {

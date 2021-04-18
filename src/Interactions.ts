@@ -163,6 +163,11 @@ export default class Interactable {
 		)
 		this._registerEventListener(name, fn)
 	}
+	public registerGenericKeyEventFunction(
+		fn: (e: KeyboardEvent) => void
+	): void {
+		this._registerEventListener(this._generateEventName("keydown", ""), fn)
+	}
 	/**
 	 * Register a touchEnd listening function
 	 * @param fn Function to execute on HTML on click events
@@ -182,7 +187,7 @@ export default class Interactable {
 		if (functions.onClick) actor.registerClickFunction(functions.onClick)
 		if (functions.onEnter) actor.registerEnterKey(functions.onEnter)
 		if (functions.onKeyDown)
-			actor.registerKeyDownFunction("", functions.onKeyDown)
+			actor.registerGenericKeyEventFunction(functions.onKeyDown)
 		if (functions.onKeyUp)
 			actor.registerKeyUpFunction("", functions.onKeyUp)
 		if (functions.onTouchEnd)
@@ -194,7 +199,7 @@ export default class Interactable {
 			actor.registerTouchEndFunction(
 				(functions.onClick as unknown) as (e: TouchEvent) => void
 			)
-		if (functions.onEnter && !functions.onEnter)
+		if (functions.onClick && !functions.onEnter)
 			actor.registerEnterKey(
 				(functions.onClick as unknown) as (e: KeyboardEvent) => void
 			)

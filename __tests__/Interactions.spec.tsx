@@ -166,4 +166,31 @@ describe("Testing the Interactions class", () => {
 		expect(() => actor.registerTouchEndFunction(console.log)).toThrowError()
 		done()
 	})
+	it("will register and fire a generic key event and throw an error on a duplication", (done) => {
+		const actor = new Interactions()
+		actor.registerGenericKeyEventFunction(_mockFire)
+		const { getByTestId } = render(
+			<input data-testid={testID} onKeyDown={(e) => actor.listen(e)} />
+		)
+		userEvent.type(getByTestId(testID), "sdlfjkl")
+		waitFor(() => {
+			expect(_mockFire).toHaveBeenCalled()
+			expect(() => actor.registerEnterKey(console.log)).toThrowError()
+			done()
+		})
+	})
+	it("will register multiple events from an editable props object", () => {
+		const actor = Interactions.generateActor({
+			onClick: jest.fn,
+			onEnter: jest.fn,
+			onKeyDown: jest.fn,
+			onKeyUp: jest.fn,
+			onTouchEnd: jest.fn,
+			onTouchStart: jest.fn,
+		})
+		expect(
+			Object.keys(actor.multiListener(...Interactions.ALL_LISTENERS))
+				.length
+		).toEqual(5)
+	})
 })
