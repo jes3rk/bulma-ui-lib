@@ -1,17 +1,17 @@
-import * as React from 'react'
+import * as React from "react"
 import {
 	BaseHTMLProps,
 	ControlField,
 	EditableProps,
 	propDefaulter,
 	stringPropCombineDefaulter,
-} from '../BaseElements'
-import Interactable from '../Interactions'
-import { exists, ifElseBlank } from '../publicUtilities'
+} from "../BaseElements"
+import Interactable from "../Interactions"
+import { exists, ifElseBlank } from "../publicUtilities"
 
 export interface InputProps extends BaseHTMLProps, EditableProps {
 	placeholder?: string
-	type?: 'number' | 'password' | 'text'
+	type?: "number" | "password" | "text"
 	value?: number | string
 }
 
@@ -29,14 +29,14 @@ export const Input = (props: InputProps): JSX.Element => {
 	}
 	_props.className = stringPropCombineDefaulter(
 		_props.className,
-		ifElseBlank(props.rounded, 'is-rounded')
+		ifElseBlank(props.rounded, "is-rounded")
 	)
 	_props.className = stringPropCombineDefaulter(
 		_props.className,
 		`${ifElseBlank(exists(_props.isSize), `is-${_props.isSize}`)}`
 	)
-	_props.className = stringPropCombineDefaulter(_props.className, 'input')
-	_props['aria-label'] = propDefaulter(_props['aria-label'], props.name)
+	_props.className = stringPropCombineDefaulter(_props.className, "input")
+	_props["aria-label"] = propDefaulter(_props["aria-label"], props.name)
 	delete _props.rounded
 	delete _props.isSize
 	return <input {..._props} />
@@ -45,7 +45,7 @@ export const Input = (props: InputProps): JSX.Element => {
 export interface TextInputProps extends InputProps {
 	horizontal?: boolean
 	loading?: boolean
-	type?: 'text' | 'password'
+	type?: "text" | "password"
 }
 
 /**
@@ -54,7 +54,7 @@ export interface TextInputProps extends InputProps {
  */
 export const TextInput = (props: TextInputProps): JSX.Element => {
 	const _props = { ...props }
-	_props.type = propDefaulter(_props.type, 'text')
+	_props.type = propDefaulter(_props.type, "text")
 	return (
 		<ControlField
 			horizontal={_props.horizontal}

@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { stringPropCombineDefaulter } from '../BaseElements'
+import * as React from "react"
+import { stringPropCombineDefaulter } from "../BaseElements"
 
 export interface _HeadingProps extends HeadingProps {
 	size: number
@@ -22,7 +22,7 @@ export const _Heading = (props: _HeadingProps): JSX.Element => {
 export interface HeadingProps {
 	children: JSX.Element | JSX.Element[] | string
 	className?: string
-	'data-testid'?: string
+	"data-testid"?: string
 }
 
 export const H1 = (props: HeadingProps): JSX.Element => (

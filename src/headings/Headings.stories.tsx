@@ -1,9 +1,9 @@
-import { Meta, Story } from '@storybook/react/types-6-0'
-import * as React from 'react'
-import { H1, H2, H3, H4, H5, H6, HeadingProps } from './Headings'
+import { Meta, Story } from "@storybook/react/types-6-0"
+import * as React from "react"
+import { H1, H2, H3, H4, H5, H6, HeadingProps } from "./Headings"
 
 export default {
-	title: 'Headings',
+	title: "Headings",
 	component: H1,
 } as Meta
 
@@ -17,4 +17,4 @@ export const Base: Story<HeadingProps> = (args) => (
 		<H6 {...args}>Heading 6</H6>
 	</div>
 )
-Base.storyName = 'Headings'
+Base.storyName = "Headings"

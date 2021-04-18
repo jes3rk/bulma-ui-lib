@@ -1,12 +1,12 @@
-import * as React from 'react'
-import { cleanup, render } from '@testing-library/react'
-import { H1, H2, H3, H4, H5, H6 } from '../../src/headings/Headings'
+import * as React from "react"
+import { cleanup, render } from "@testing-library/react"
+import { H1, H2, H3, H4, H5, H6 } from "../../src/headings/Headings"
 
-describe('Testing the Heading component', () => {
+describe("Testing the Heading component", () => {
 	afterEach(() => {
 		cleanup()
 	})
-	it('will render an H1 element', () => {
+	it("will render an H1 element", () => {
 		const { asFragment } = render(<H1>Hello World</H1>)
 		expect(asFragment()).toMatchInlineSnapshot(`
             <DocumentFragment>
@@ -18,7 +18,7 @@ describe('Testing the Heading component', () => {
             </DocumentFragment>
         `)
 	})
-	it('will render an H2 element', () => {
+	it("will render an H2 element", () => {
 		const { asFragment } = render(<H2>Hello World</H2>)
 		expect(asFragment()).toMatchInlineSnapshot(`
             <DocumentFragment>
@@ -30,7 +30,7 @@ describe('Testing the Heading component', () => {
             </DocumentFragment>
         `)
 	})
-	it('will render an H3 element', () => {
+	it("will render an H3 element", () => {
 		const { asFragment } = render(<H3>Hello World</H3>)
 		expect(asFragment()).toMatchInlineSnapshot(`
             <DocumentFragment>
@@ -42,7 +42,7 @@ describe('Testing the Heading component', () => {
             </DocumentFragment>
         `)
 	})
-	it('will render an H4 element', () => {
+	it("will render an H4 element", () => {
 		const { asFragment } = render(<H4>Hello World</H4>)
 		expect(asFragment()).toMatchInlineSnapshot(`
             <DocumentFragment>
@@ -54,7 +54,7 @@ describe('Testing the Heading component', () => {
             </DocumentFragment>
         `)
 	})
-	it('will render an H5 element', () => {
+	it("will render an H5 element", () => {
 		const { asFragment } = render(<H5>Hello World</H5>)
 		expect(asFragment()).toMatchInlineSnapshot(`
             <DocumentFragment>
@@ -66,7 +66,7 @@ describe('Testing the Heading component', () => {
             </DocumentFragment>
         `)
 	})
-	it('will render an H6 element', () => {
+	it("will render an H6 element", () => {
 		const { asFragment } = render(<H6>Hello World</H6>)
 		expect(asFragment()).toMatchInlineSnapshot(`
             <DocumentFragment>

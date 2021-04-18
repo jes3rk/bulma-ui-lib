@@ -1,14 +1,14 @@
-import * as React from 'react'
-import Interactable from './Interactions'
-import { exists, ifElseBlank } from './publicUtilities'
+import * as React from "react"
+import Interactable from "./Interactions"
+import { exists, ifElseBlank } from "./publicUtilities"
 
 /**
  * Properties shared amongst all HTML elements
  */
 export interface BaseHTMLProps {
-	'aria-label'?: string
+	"aria-label"?: string
 	className?: string
-	'data-testid'?: string
+	"data-testid"?: string
 	name?: string
 	title?: string
 }
@@ -17,7 +17,7 @@ export interface BaseLayoutProps extends BaseHTMLProps {
 	children?: JSX.Element | JSX.Element[]
 }
 
-type BasicLayoutTypes = 'column' | 'columns' | 'container'
+type BasicLayoutTypes = "column" | "columns" | "container"
 
 /**
  * Internal class for basic layout components. Should cover most situations for a simple layout type
@@ -34,17 +34,23 @@ export const BasicLayout = (
 	return <div {..._props}>{_props.children}</div>
 }
 
-type _sizes = 'small' | 'medium' | 'large' | 'normal'
+type _sizes = "small" | "medium" | "large" | "normal"
+
+export interface EditableFunctions {
+	onClick?: <T extends HTMLElement>(e: React.MouseEvent<T>) => void
+	onEnter?: <T extends HTMLElement>(e: React.KeyboardEvent<T>) => void
+	onKeyDown?: <T extends HTMLElement>(e: React.KeyboardEvent<T>) => void
+	onKeyUp?: <T extends HTMLElement>(e: React.KeyboardEvent<T>) => void
+	onTouchEnd?: <T extends HTMLElement>(e: React.TouchEvent<T>) => void
+	onTouchStart?: <T extends HTMLElement>(e: React.TouchEvent<T>) => void
+}
 
 /**
  * Properties shared amongst editable/interactable elements
  */
-export interface EditableProps {
+export interface EditableProps extends EditableFunctions {
 	actor?: Interactable
 	disabled?: boolean
-	onClick?: <T extends HTMLElement>(e: React.MouseEvent<T>) => void
-	onKeyDown?: <T extends HTMLElement>(e: React.KeyboardEvent<T>) => void
-	onKeyUp?: <T extends HTMLElement>(e: React.KeyboardEvent<T>) => void
 	readonly?: boolean
 	rounded?: boolean
 	isSize?: _sizes
@@ -73,7 +79,7 @@ export const ControlField = ({
 }): JSX.Element => {
 	const _label = <label className="label">{name}</label>
 	return (
-		<div className={`field ${ifElseBlank(horizontal, 'is-horizontal')}`}>
+		<div className={`field ${ifElseBlank(horizontal, "is-horizontal")}`}>
 			{horizontal ? (
 				<div className="field-label is-normal">{_label}</div>
 			) : (
@@ -83,7 +89,7 @@ export const ControlField = ({
 				<div
 					className={`control ${ifElseBlank(
 						loading,
-						'is-loading'
+						"is-loading"
 					)} ${ifElseBlank(exists(size), `is-${size}`)}`}
 				>
 					{children}
@@ -116,6 +122,6 @@ export const stringPropCombineDefaulter = (
 	stringProp: string | undefined,
 	defaultValue: string
 ): string =>
-	exists(stringProp) && stringProp !== ''
+	exists(stringProp) && stringProp !== ""
 		? `${defaultValue} ${stringProp}`
 		: defaultValue

@@ -1,9 +1,9 @@
-import { cleanup, render } from '@testing-library/react'
-import * as React from 'react'
-import { Container } from '../../src/layout/Container'
+import { cleanup, render } from "@testing-library/react"
+import * as React from "react"
+import { Container } from "../../src/layout/Container"
 
-describe('Testing the container', () => {
-	const testID = 'Helloljdflksja'
+describe("Testing the container", () => {
+	const testID = "Helloljdflksja"
 	afterEach(() => {
 		cleanup()
 	})
@@ -11,6 +11,6 @@ describe('Testing the container', () => {
 		const { getByTestId } = render(
 			<Container data-testid={testID}></Container>
 		)
-		expect(getByTestId(testID)).toHaveAttribute('class', 'container')
+		expect(getByTestId(testID)).toHaveAttribute("class", "container")
 	})
 })

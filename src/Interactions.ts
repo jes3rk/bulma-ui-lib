@@ -1,5 +1,7 @@
-import * as React from 'react'
-import { simpleHash } from './publicUtilities'
+import * as React from "react"
+import { KeyboardEvent, MouseEvent, SyntheticEvent, TouchEvent } from "react"
+import { EditableFunctions } from "./BaseElements"
+import { simpleHash } from "./publicUtilities"
 
 type KeyEventOptions = {
 	ctrlOrMeta?: boolean
@@ -10,8 +12,14 @@ type KeyEventOptions = {
  * Class to handle HTML Element interactions
  */
 export default class Interactable {
-	public static ALL_LISTENERS: string[] = ['onClick', 'onKeyDown', 'onKeyUp']
-	private _interactionTracker: Map<string, (e: React.SyntheticEvent) => void>
+	public static ALL_LISTENERS: string[] = [
+		"onClick",
+		"onKeyDown",
+		"onKeyUp",
+		"onTouchEnd",
+		"onTouchStart",
+	]
+	private _interactionTracker: Map<string, (e: SyntheticEvent) => void>
 	private keyEventOptions: KeyEventOptions = {
 		ctrlOrMeta: false,
 		shift: false,
@@ -20,7 +28,7 @@ export default class Interactable {
 	constructor() {
 		this._interactionTracker = new Map<
 			string,
-			(e: React.SyntheticEvent) => void
+			(e: SyntheticEvent) => void
 		>()
 	}
 
@@ -34,7 +42,7 @@ export default class Interactable {
 	 */
 	private _generateEventName(
 		t: string,
-		key = '',
+		key = "",
 		metaOrCtrl = false,
 		shft = false
 	): string {
@@ -45,17 +53,26 @@ export default class Interactable {
 	 * Listener to listen for events
 	 * @param e Event
 	 */
-	public listen(e: React.SyntheticEvent): void {
+	public listen(e: SyntheticEvent): void {
 		const params: [string, string?, boolean?, boolean?] = [e.type]
-		if (e.type.match('key')) {
-			const synthE = e as React.KeyboardEvent<HTMLElement>
+		let genericName: string = null
+		if (e.type.match("key")) {
+			const synthE = e as KeyboardEvent<HTMLElement>
 			params.push(synthE.key)
 			params.push(synthE.metaKey || synthE.ctrlKey)
 			params.push(synthE.shiftKey)
+			genericName = this._generateEventName(
+				params[0],
+				"",
+				params[2],
+				params[3]
+			)
 		}
-		const name = this._generateEventName(...params)
-		if (this._interactionTracker.has(name))
-			this._interactionTracker.get(name)(e)
+		const specificName = this._generateEventName(...params)
+		if (this._interactionTracker.has(specificName))
+			this._interactionTracker.get(specificName)(e)
+		if (genericName !== null && this._interactionTracker.has(genericName))
+			this._interactionTracker.get(genericName)(e)
 	}
 
 	/**
@@ -65,8 +82,8 @@ export default class Interactable {
 	 */
 	public multiListener(
 		...listeners: string[]
-	): { [key: string]: (e: React.SyntheticEvent) => void } {
-		const ret: { [key: string]: (e: React.SyntheticEvent) => void } = {}
+	): { [key: string]: (e: SyntheticEvent) => void } {
+		const ret: { [key: string]: (e: SyntheticEvent) => void } = {}
 		listeners.forEach((k) => {
 			ret[k] = (e) => this.listen(e)
 		})
@@ -78,10 +95,9 @@ export default class Interactable {
 	 * @param fn Function to execute on HTML on click events
 	 */
 	public registerClickFunction<T extends HTMLElement>(
-		fn: (e: React.MouseEvent<T>) => void
+		fn: (e: MouseEvent<T>) => void
 	): void {
-		const name = this._generateEventName('click')
-		this._registerEventListener(name, fn)
+		this._registerEventListener(this._generateEventName("click"), fn)
 	}
 
 	/**
@@ -91,12 +107,12 @@ export default class Interactable {
 	 */
 	private _registerEventListener(
 		name: string,
-		fn: (e: React.SyntheticEvent) => void
+		fn: (e: SyntheticEvent) => void
 	): void {
 		if (!this._interactionTracker.has(name)) {
 			this._interactionTracker.set(name, fn)
 		} else {
-			throw new DuplicateEventError('click')
+			throw new DuplicateEventError("click")
 		}
 	}
 
@@ -106,10 +122,10 @@ export default class Interactable {
 	 * @param options Optional: specific use of ctrl/meta and/or shift key
 	 */
 	public registerEnterKey(
-		fn: (e: React.KeyboardEvent) => void,
+		fn: (e: KeyboardEvent) => void,
 		options: KeyEventOptions = {}
 	): void {
-		this.registerKeyUpFunction('enter', fn, options)
+		this.registerKeyUpFunction("enter", fn, options)
 	}
 	/**
 	 * Register a key down event
@@ -118,11 +134,11 @@ export default class Interactable {
 	 */
 	public registerKeyDownFunction(
 		keyName: string,
-		fn: (e: React.KeyboardEvent) => void,
+		fn: (e: KeyboardEvent) => void,
 		options: KeyEventOptions = { ...this.keyEventOptions }
 	): void {
 		const name = this._generateEventName(
-			'keydown',
+			"keydown",
 			keyName,
 			options.ctrlOrMeta,
 			options.shift
@@ -136,16 +152,53 @@ export default class Interactable {
 	 */
 	public registerKeyUpFunction(
 		keyName: string,
-		fn: (e: React.KeyboardEvent) => void,
+		fn: (e: KeyboardEvent) => void,
 		options: KeyEventOptions = { ...this.keyEventOptions }
 	): void {
 		const name = this._generateEventName(
-			'keyup',
+			"keyup",
 			keyName,
 			options.ctrlOrMeta,
 			options.shift
 		)
 		this._registerEventListener(name, fn)
+	}
+	/**
+	 * Register a touchEnd listening function
+	 * @param fn Function to execute on HTML on click events
+	 */
+	public registerTouchEndFunction(fn: (e: TouchEvent) => void): void {
+		this._registerEventListener(this._generateEventName("touchend"), fn)
+	}
+	/**
+	 * Register a touchStart listening function
+	 * @param fn Function to execute on HTML on click events
+	 */
+	public registerTouchStartFunction(fn: (e: TouchEvent) => void): void {
+		this._registerEventListener(this._generateEventName("touchstart"), fn)
+	}
+	public static generateActor(functions: EditableFunctions): Interactable {
+		const actor = new Interactable()
+		if (functions.onClick) actor.registerClickFunction(functions.onClick)
+		if (functions.onEnter) actor.registerEnterKey(functions.onEnter)
+		if (functions.onKeyDown)
+			actor.registerKeyDownFunction("", functions.onKeyDown)
+		if (functions.onKeyUp)
+			actor.registerKeyUpFunction("", functions.onKeyUp)
+		if (functions.onTouchEnd)
+			actor.registerTouchEndFunction(functions.onTouchEnd)
+		if (functions.onTouchStart)
+			actor.registerTouchStartFunction(functions.onTouchStart)
+
+		if (functions.onClick && !functions.onTouchEnd)
+			actor.registerTouchEndFunction(
+				(functions.onClick as unknown) as (e: TouchEvent) => void
+			)
+		if (functions.onEnter && !functions.onEnter)
+			actor.registerEnterKey(
+				(functions.onClick as unknown) as (e: KeyboardEvent) => void
+			)
+		return actor
 	}
 }
 

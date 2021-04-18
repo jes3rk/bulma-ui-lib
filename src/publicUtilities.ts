@@ -12,7 +12,7 @@ export const exists = (val: unknown): boolean =>
  * @returns Hashed value
  */
 export const simpleHash = (s: string): string => {
-	if (typeof s !== 'string') throw new Error('Input must be of type string')
+	if (typeof s !== "string") throw new Error("Input must be of type string")
 	let hash = 0
 	for (let i = 0; i < s.length; i++) {
 		const char = s.charCodeAt(i)
@@ -28,4 +28,4 @@ export const simpleHash = (s: string): string => {
  * @returns string
  */
 export const ifElseBlank = (test: boolean, value: string): string =>
-	test ? value : ''
+	test ? value : ""
