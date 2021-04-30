@@ -3,6 +3,7 @@ export { Input, TextInput } from "./inputs/Input"
 
 export { Container } from "./layout/Container"
 export { ColumnContainer, Column } from "./layout/Columns"
+export { NavBar } from "./layout/Navbar"
 
 export { default as Interactable } from "./Interactions"
 

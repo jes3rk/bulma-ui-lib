@@ -1,4 +1,5 @@
 import * as React from "react"
+import { ReactNode } from "react"
 import Interactable from "./Interactions"
 import { exists, ifElseBlank } from "./publicUtilities"
 
@@ -14,7 +15,7 @@ export interface BaseHTMLProps {
 }
 
 export interface BaseLayoutProps extends BaseHTMLProps {
-	children?: JSX.Element | JSX.Element[]
+	children?: ReactNode
 }
 
 type BasicLayoutTypes = "column" | "columns" | "container"
