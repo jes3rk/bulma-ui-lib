@@ -5,6 +5,7 @@ import {
 	isWithin,
 	logging,
 	parseURLQuery,
+	simpleHash,
 	timedelta,
 	viableString,
 } from "../src/utilities"
@@ -156,5 +157,13 @@ describe("Testing the isWithin function", () => {
 		now.setHours(7)
 		past.setHours(0)
 		expect(isWithin(past, { hours: -1 }, now)).toEqual(false)
+	})
+})
+describe("Testing the simple hash function", () => {
+	it("returns a string", () => {
+		expect(typeof simpleHash("hello world")).toEqual("string")
+	})
+	it("will throw an error if not given a string", () => {
+		expect(() => simpleHash((false as unknown) as string)).toThrowError()
 	})
 })

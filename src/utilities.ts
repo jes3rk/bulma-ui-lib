@@ -133,23 +133,6 @@ export const isWithin = (
 	return new Date(dateToTest).getTime() >= deltaDate.getTime()
 }
 
-/**
- * Function to generate non-cryptographically secure but mostly unique hash values for strings
- * @param str String to weakly hash
- */
-export const weakHash = (str: string): string => {
-	let hash = 0
-	if (str.length == 0) {
-		return hash.toString()
-	}
-	for (let i = 0; i < str.length; i++) {
-		const char = str.charCodeAt(i)
-		hash = (hash << 5) - hash + char
-		hash = hash & hash // Convert to 32bit integer
-	}
-	return hash.toString()
-}
-
 export class CalledIn {
 	private static _tracker: Map<string, number> = new Map<string, number>()
 
