@@ -1,7 +1,6 @@
-import * as React from "react"
 import { KeyboardEvent, MouseEvent, SyntheticEvent, TouchEvent } from "react"
 import { EditableFunctions } from "./BaseElements"
-import { simpleHash } from "./publicUtilities"
+import { simpleHash } from "./utilities"
 
 type KeyEventOptions = {
 	ctrlOrMeta?: boolean

@@ -1,6 +1,6 @@
 import * as React from "react"
 import Interactable from "./Interactions"
-import { exists, ifElseBlank } from "./publicUtilities"
+import { exists, ifElseBlank } from "./utilities"
 
 /**
  * Properties shared amongst all HTML elements

@@ -1,25 +1,18 @@
 import * as React from "react"
 import * as ReactDOMServer from "react-dom/server"
-import { fireEvent, render, cleanup, waitFor } from "@testing-library/react"
+import { fireEvent, render, cleanup } from "@testing-library/react"
 import "@testing-library/jest-dom/extend-expect"
 import { axe, toHaveNoViolations } from "jest-axe"
-import {
-	Button,
-	PrimaryButton,
-	SecondaryButton,
-} from "../../src/buttons/Button"
-import Interactable from "../../src/Interactions"
-import userEvent from "@testing-library/user-event"
+import { makeId } from "../src/_base_elements"
+import { Button, PrimaryButton, SecondaryButton } from "../src/button"
 
 expect.extend(toHaveNoViolations)
+afterEach(cleanup)
 
 describe("Testing the Base Button component", () => {
-	const testId = "helloworld"
-	afterEach(cleanup)
 	it("can be rendered in the UI", () => {
-		const { getByTestId } = render(
-			<Button data-testid={testId}>Hello</Button>
-		)
+		const testId = makeId()
+		const { getByTestId } = render(<Button data-testid={testId} />)
 		expect(getByTestId(testId)).toBeInTheDocument()
 	})
 	it("will be rendered with a text content", () => {
@@ -28,9 +21,8 @@ describe("Testing the Base Button component", () => {
 		expect(getByText(textContent)).toBeInTheDocument()
 	})
 	it("will perform actions on click", () => {
-		const clickable = jest.fn(
-			(e: React.SyntheticEvent<HTMLElement>): void => null
-		)
+		const testId: string = makeId()
+		const clickable = jest.fn()
 		const { getByTestId } = render(
 			<Button data-testid={testId} onClick={clickable}>
 				Hello
@@ -40,9 +32,8 @@ describe("Testing the Base Button component", () => {
 		expect(clickable).toHaveBeenCalled()
 	})
 	it("will perform actions on touch end", () => {
-		const clickable = jest.fn(
-			(e: React.SyntheticEvent<HTMLElement>): void => null
-		)
+		const testId: string = makeId()
+		const clickable = jest.fn()
 		const { getByTestId } = render(
 			<Button data-testid={testId} onClick={clickable}>
 				Hello
@@ -52,9 +43,8 @@ describe("Testing the Base Button component", () => {
 		expect(clickable).toHaveBeenCalled()
 	})
 	it("will perform actions on ENTER if focused", () => {
-		const enterable = jest.fn(
-			(e: React.SyntheticEvent<HTMLElement>): void => null
-		)
+		const testId = makeId()
+		const enterable = jest.fn()
 		const { getByTestId } = render(
 			<Button data-testid={testId} onEnter={enterable}>
 				Hello
@@ -68,15 +58,10 @@ describe("Testing the Base Button component", () => {
 		expect(enterable).toHaveBeenCalled()
 	})
 	it("will perform different actions on touch end, enter, and click events", () => {
-		const clickable = jest.fn(
-			(e: React.SyntheticEvent<HTMLElement>): void => null
-		)
-		const touchable = jest.fn(
-			(e: React.SyntheticEvent<HTMLElement>): void => null
-		)
-		const enterable = jest.fn(
-			(e: React.SyntheticEvent<HTMLElement>): void => null
-		)
+		const testId: string = makeId()
+		const clickable = jest.fn()
+		const touchable = jest.fn()
+		const enterable = jest.fn()
 		const { getByTestId } = render(
 			<Button
 				data-testid={testId}
@@ -101,9 +86,8 @@ describe("Testing the Base Button component", () => {
 		expect(clickable).toHaveBeenCalledTimes(1)
 	})
 	it("will do nothing if ENTER'd with no functions", () => {
-		const { getByTestId } = render(
-			<Button data-testid={testId}>Hello</Button>
-		)
+		const testId: string = makeId()
+		const { getByTestId } = render(<Button data-testid={testId} />)
 		getByTestId(testId).focus()
 		fireEvent.keyUp(getByTestId(testId), { key: "Enter", keyCode: 13 })
 		expect(getByTestId(testId)).toBeInTheDocument()
@@ -117,37 +101,16 @@ describe("Testing the Base Button component", () => {
 		const results = await axe(html)
 		expect(results).toHaveNoViolations()
 	})
-	it("will use an actor rather than an included on click function", (done) => {
-		const actor = new Interactable()
-		const actorClicker = jest.fn()
-		const onClicker = jest.fn()
-		actor.registerClickFunction(actorClicker)
-		const { getByTestId } = render(
-			<Button data-testid={testId} actor={actor} onClick={onClicker}>
-				Hello
-			</Button>
-		)
-		userEvent.click(getByTestId(testId))
-		waitFor(() => {
-			expect(actorClicker).toHaveBeenCalled()
-			expect(onClicker).not.toHaveBeenCalled()
-			done()
-		})
-	})
 })
 describe("Testing other buttons", () => {
-	const testId = "dfkljdsklf;a"
-	afterEach(cleanup)
 	it("is a primary button and has the keyword 'primary' in the className", () => {
-		const { getByTestId } = render(
-			<PrimaryButton data-testid={testId}>Hello</PrimaryButton>
-		)
+		const testId: string = makeId()
+		const { getByTestId } = render(<PrimaryButton data-testid={testId} />)
 		expect(getByTestId(testId)).toHaveClass("is-primary")
 	})
 	it("is a secondary button and has the keyword 'secondary' in the className", () => {
-		const { getByTestId } = render(
-			<SecondaryButton data-testid={testId}>Hello</SecondaryButton>
-		)
-		expect(getByTestId(testId)).toHaveClass("is-secondary")
+		const testId: string = makeId()
+		const { getByTestId } = render(<SecondaryButton data-testid={testId} />)
+		expect(getByTestId(testId)).toHaveClass("secondary")
 	})
 })
