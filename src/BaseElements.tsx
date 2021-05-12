@@ -36,13 +36,13 @@ export const BasicLayout = (
 
 type _sizes = "small" | "medium" | "large" | "normal"
 
-export interface EditableFunctions {
-	onClick?: <T extends HTMLElement>(e: React.MouseEvent<T>) => void
-	onEnter?: <T extends HTMLElement>(e: React.KeyboardEvent<T>) => void
-	onKeyDown?: <T extends HTMLElement>(e: React.KeyboardEvent<T>) => void
-	onKeyUp?: <T extends HTMLElement>(e: React.KeyboardEvent<T>) => void
-	onTouchEnd?: <T extends HTMLElement>(e: React.TouchEvent<T>) => void
-	onTouchStart?: <T extends HTMLElement>(e: React.TouchEvent<T>) => void
+export interface EditableFunctions<T = HTMLElement> {
+	onClick?: (e: React.MouseEvent<T>) => void
+	onEnter?: (e: React.KeyboardEvent<T>) => void
+	onKeyDown?: (e: React.KeyboardEvent<T>) => void
+	onKeyUp?: (e: React.KeyboardEvent<T>) => void
+	onTouchEnd?: (e: React.TouchEvent<T>) => void
+	onTouchStart?: (e: React.TouchEvent<T>) => void
 }
 
 /**

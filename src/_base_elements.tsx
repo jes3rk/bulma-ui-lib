@@ -68,15 +68,3 @@ export const sanitizeProps = (
 		returnObj.className = `${defaultProps.className} ${passedProps.className}`
 	return returnObj
 }
-
-export const onKeyPress = (
-	e: React.KeyboardEvent<HTMLElement>,
-	handler: {
-		[keyCode: number]: (e: React.KeyboardEvent<HTMLElement>) => void
-	}
-): void => {
-	if (exists(handler[e.keyCode])) {
-		e.preventDefault()
-		handler[e.keyCode](e)
-	}
-}

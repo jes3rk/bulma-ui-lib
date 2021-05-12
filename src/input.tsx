@@ -3,10 +3,10 @@ import {
 	BaseHTMLProps,
 	filterObjectProps,
 	makeId,
-	onKeyPress,
 	sanitizeProps,
 } from "./_base_elements"
 import { exists } from "./utilities"
+import Interactable from "./Interactions"
 
 type InputType = "checkbox" | "number" | "password" | "text"
 
@@ -42,14 +42,11 @@ export const Input = (props: InputProps): JSX.Element => {
 			delete _props.value
 		}
 	}
+	const actor = Interactable.generateActor<HTMLInputElement>(_props)
 	return (
 		<input
 			{...filterObjectProps(_props, null, ["onEnter"])}
-			onKeyUp={(e) =>
-				onKeyPress(e, {
-					13: props.onEnter,
-				})
-			}
+			{...actor.multiListener(...Interactable.ALL_LISTENERS)}
 		/>
 	)
 }
@@ -93,7 +90,6 @@ export const CheckBox = (props: CheckboxProps): JSX.Element => {
 		_inputProps.name = props.name
 	}
 	if (exists(props.onChange)) _inputProps.onChange = props.onChange
-	// if (exists(props.onEnter)) _inputProps.onEnter = props.onEnter; TODO: make accessible
 	return exists(props.readOnlyDisplayFunction) && props.readOnly ? (
 		<div>{props.readOnlyDisplayFunction(props.value)}</div>
 	) : (
@@ -199,6 +195,13 @@ export const ClickableTextInput = ({
 		setIsEditable(false)
 		onFinish(e)
 	}
+	const actor = new Interactable()
+	actor.registerClickFunction(() => {
+		if (allowEditing) setIsEditable(true)
+	})
+	actor.registerEnterKey(() => {
+		if (allowEditing) setIsEditable(!isEditable)
+	})
 	const props = {
 		children: (
 			<TextInput
@@ -217,21 +220,13 @@ export const ClickableTextInput = ({
 			if (!e.currentTarget.contains(e.relatedTarget as Node))
 				setIsEditable(false)
 		},
-		onClick: () => {
-			if (allowEditing) setIsEditable(true)
-		},
-		onKeyDown: (e: React.KeyboardEvent<HTMLElement>) =>
-			onKeyPress(e, {
-				13: () => {
-					if (allowEditing) setIsEditable(true)
-				},
-			}),
 		tabIndex: 0,
 	}
 	return (
 		<Wrapper
 			className="clickable-text-input-wrapper"
 			{...props}
+			{...actor.multiListener(...Interactable.ALL_LISTENERS)}
 			data-testid="clickable-wrapper"
 		/>
 	)

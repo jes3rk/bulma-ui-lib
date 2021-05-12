@@ -181,7 +181,9 @@ export default class Interactable {
 	public registerTouchStartFunction(fn: (e: TouchEvent) => void): void {
 		this._registerEventListener(this._generateEventName("touchstart"), fn)
 	}
-	public static generateActor(functions: EditableFunctions): Interactable {
+	public static generateActor<T extends HTMLElement>(
+		functions: EditableFunctions<T>
+	): Interactable {
 		const actor = new Interactable()
 		if (functions.onClick) actor.registerClickFunction(functions.onClick)
 		if (functions.onEnter) actor.registerEnterKey(functions.onEnter)

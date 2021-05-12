@@ -1,7 +1,13 @@
 import { axe, toHaveNoViolations } from "jest-axe"
 import * as React from "react"
 import * as ReactDOMServer from "react-dom/server"
-import { fireEvent, render, cleanup, waitFor } from "@testing-library/react"
+import {
+	fireEvent,
+	render,
+	cleanup,
+	waitFor,
+	getByTestId,
+} from "@testing-library/react"
 import "@testing-library/jest-dom/extend-expect"
 import { CheckBox, ClickableTextInput, Input, TextInput } from "../src/input"
 import { makeId } from "../src/_base_elements"
@@ -162,6 +168,21 @@ describe("Testing a Text Input", () => {
 		})
 		expect(enterable).toHaveBeenCalled()
 	})
+	it("will run a function onChange", () => {
+		const testId: string = makeId()
+		const changeFn = jest.fn()
+		const { getByTestId } = render(
+			<TextInput
+				inputProps={{
+					"data-testid": testId,
+				}}
+				onChange={changeFn}
+			/>
+		)
+		getByTestId(testId).focus()
+		userEvent.type(getByTestId(testId), "hello world")
+		expect(changeFn).toHaveBeenCalled()
+	})
 	it("the editable version is accessable by default", async () => {
 		const html: string = ReactDOMServer.renderToString(
 			<div role="main">
@@ -197,6 +218,26 @@ describe("Testing a Clickable Text Input", () => {
 			/>
 		)
 		userEvent.click(getByText(val))
+		waitFor(() => {
+			expect(queryAllByRole("textbox").length).toEqual(0)
+			done()
+		})
+	})
+	it("won't change if allow editing is false and it is ENTERED", (done) => {
+		const val = makeId()
+		const { queryAllByRole, getByText } = render(
+			<ClickableTextInput
+				allowEditing={false}
+				name="Testing Input"
+				onFinish={null}
+				value={val}
+			/>
+		)
+		getByText(val).focus()
+		fireEvent.keyUp(getByText(val), {
+			key: "Enter",
+			keyCode: 13,
+		})
 		waitFor(() => {
 			expect(queryAllByRole("textbox").length).toEqual(0)
 			done()
@@ -239,6 +280,27 @@ describe("Testing a Clickable Text Input", () => {
 				expect(finisher).toHaveBeenCalled()
 				done()
 			})
+		})
+	})
+	it("will continue to be active when changing focus internally", (done) => {
+		const val = makeId()
+		const finisher = jest.fn()
+		const { queryAllByRole, getByText, getByLabelText } = render(
+			<ClickableTextInput
+				allowEditing={true}
+				name="Testing Input"
+				onFinish={finisher}
+				value={val}
+			/>
+		)
+		getByText(val).click()
+		getByLabelText("Testing Input").focus()
+		waitFor(() => {
+			expect(queryAllByRole("textbox").length).toEqual(1)
+			queryAllByRole("textbox")[0].focus()
+		}).then(() => {
+			expect(finisher).not.toHaveBeenCalled()
+			done()
 		})
 	})
 	it("will call the onFinisher when typing 'Enter' in the text box", (done) => {
@@ -294,84 +356,57 @@ describe("Testing a Clickable Text Input", () => {
 			})
 		})
 	})
-	describe("Testing a Checbox Input", () => {
-		afterEach(cleanup)
-		it("will be rendered with children", () => {
-			const test_id = "text-input"
-			const { getByTestId } = render(<CheckBox data-testid={test_id} />)
-			expect(getByTestId(test_id).hasChildNodes()).toBeTruthy()
-		})
-		it("will render input props correctly", () => {
-			const input_test_id: string = makeId()
-			const { getByTestId } = render(
-				<CheckBox
-					inputProps={{
-						"data-testid": input_test_id,
-					}}
-				/>
-			)
-			expect(getByTestId(input_test_id).tagName.toLowerCase()).toEqual(
-				"input"
-			)
-		})
-		it("will correctly add props to wrapper", () => {
-			const wrapper_test_id: string = makeId()
-			const { getByTestId } = render(
-				<CheckBox
-					data-testid={wrapper_test_id}
-					wrapperProps={{
-						id: "Hello",
-					}}
-				/>
-			)
-			expect(getByTestId(wrapper_test_id).tagName.toLowerCase()).toEqual(
-				"div"
-			)
-			expect(getByTestId(wrapper_test_id)).toHaveAttribute("class")
-			expect(getByTestId(wrapper_test_id)).toHaveAttribute("id")
-		})
-		it("will have a value if passed a value", () => {
-			const wrapper_test_id: string = makeId()
-			const value = true
-			const { getByRole } = render(
-				<CheckBox data-testid={wrapper_test_id} value={value} />
-			)
-			expect(getByRole("checkbox")).toHaveAttribute("checked")
-		})
-		it("will render without an input if set to readOnly", () => {
-			const value = false
-			const { getByRole } = render(
-				<CheckBox name="testing" readOnly={true} value={value} />
-			)
-			expect(getByRole("checkbox")).toHaveAttribute("disabled")
-		})
-		it.skip("will run a function if the ENTER key is pressed", () => {
-			const testId: string = makeId()
-			const enterable = jest.fn()
-			const { getByTestId } = render(
-				<TextInput
-					inputProps={{
-						"data-testid": testId,
-					}}
-					onEnter={enterable}
-				/>
-			)
-			getByTestId(testId).focus()
-			fireEvent.keyUp(getByTestId(testId), {
-				key: "Enter",
-				keyCode: 13,
-			})
-			expect(enterable).toHaveBeenCalled()
-		})
-		it.skip("the editable version is accessable by default", async () => {
-			const html: string = ReactDOMServer.renderToString(
-				<div role="main">
-					<TextInput value="hello value" />
-				</div>
-			)
-			const results = await axe(html)
-			expect(results).toHaveNoViolations()
-		})
+})
+describe("Testing a Checbox Input", () => {
+	afterEach(cleanup)
+	it("will be rendered with children", () => {
+		const test_id = "text-input"
+		const { getByTestId } = render(<CheckBox data-testid={test_id} />)
+		expect(getByTestId(test_id).hasChildNodes()).toBeTruthy()
+	})
+	it("will render input props correctly", () => {
+		const input_test_id: string = makeId()
+		const { getByTestId } = render(
+			<CheckBox
+				inputProps={{
+					"data-testid": input_test_id,
+				}}
+			/>
+		)
+		expect(getByTestId(input_test_id).tagName.toLowerCase()).toEqual(
+			"input"
+		)
+	})
+	it("will correctly add props to wrapper", () => {
+		const wrapper_test_id: string = makeId()
+		const { getByTestId } = render(
+			<CheckBox
+				data-testid={wrapper_test_id}
+				wrapperProps={{
+					id: "Hello",
+				}}
+			/>
+		)
+		expect(getByTestId(wrapper_test_id).tagName.toLowerCase()).toEqual(
+			"div"
+		)
+		expect(getByTestId(wrapper_test_id)).toHaveAttribute("class")
+		expect(getByTestId(wrapper_test_id)).toHaveAttribute("id")
+	})
+	it("will have a value if passed a value", () => {
+		const wrapper_test_id: string = makeId()
+		const value = true
+		const { getByRole } = render(
+			<CheckBox data-testid={wrapper_test_id} value={value} />
+		)
+		expect(getByRole("checkbox")).toHaveAttribute("checked")
+	})
+	it("will render without an input if set to readOnly", () => {
+		const value = false
+		const { getByRole } = render(
+			<CheckBox name="testing" readOnly={true} value={value} />
+		)
+		expect(getByRole("checkbox")).toHaveAttribute("disabled")
 	})
 	it("will call the read only function when set", () => {
 		const readOnlyFunction = jest.fn()
@@ -385,5 +420,23 @@ describe("Testing a Clickable Text Input", () => {
 			/>
 		)
 		expect(readOnlyFunction).toHaveBeenCalled()
+	})
+	it("will call onChange if passed", (done) => {
+		const changeFn = jest.fn()
+		const input_test_id = makeId()
+		const { getByTestId } = render(
+			<CheckBox
+				name="testing"
+				inputProps={{
+					"data-testid": input_test_id,
+				}}
+				onChange={changeFn}
+			/>
+		)
+		userEvent.click(getByTestId(input_test_id))
+		waitFor(() => {
+			expect(changeFn).toHaveBeenCalled()
+			done()
+		})
 	})
 })
