@@ -51,13 +51,12 @@ export const filterObjectProps = (
 
 export const sanitizeProps = (
 	defaultProps: BaseHTMLProps,
-	passedProps: BaseHTMLProps
+	passedProps: BaseHTMLProps = {}
 ): BaseHTMLProps => {
-	const _passedProps = exists(passedProps) ? passedProps : {}
 	const returnObj: BaseHTMLProps = Object.assign(
 		{},
 		defaultProps,
-		_passedProps
+		passedProps
 	)
 	if (!exists(returnObj["aria-label"]))
 		returnObj["aria-label"] = returnObj.name
@@ -65,8 +64,8 @@ export const sanitizeProps = (
 	if (!exists(returnObj.id)) returnObj.id = makeId()
 	if (process.env.NODE_ENV === "production" && returnObj["data-testid"])
 		delete returnObj["data-testid"]
-	if (exists(defaultProps.className) && exists(_passedProps.className))
-		returnObj.className = `${defaultProps.className} ${_passedProps.className}`
+	if (exists(defaultProps.className) && exists(passedProps.className))
+		returnObj.className = `${defaultProps.className} ${passedProps.className}`
 	return returnObj
 }
 
