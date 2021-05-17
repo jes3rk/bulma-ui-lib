@@ -146,4 +146,21 @@ describe("Testing the autocomplete element", () => {
 			done()
 		})
 	})
+	it("calls onChange when clicking on an options", (done) => {
+		const changer = jest.fn()
+		const { getByLabelText, getByText } = render(
+			<AutoComplete
+				name="Name"
+				options={["click"]}
+				onChange={changer}
+				value=""
+			/>
+		)
+		getByLabelText("Name").focus()
+		userEvent.click(getByText("click"))
+		waitFor(() => {
+			expect(changer).toHaveBeenCalled()
+			done()
+		})
+	})
 })
