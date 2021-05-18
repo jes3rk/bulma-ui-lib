@@ -9,7 +9,13 @@ import {
 	getByTestId,
 } from "@testing-library/react"
 import "@testing-library/jest-dom/extend-expect"
-import { CheckBox, ClickableTextInput, Input, TextInput } from "../src/input"
+import {
+	CheckBox,
+	ClickableTextInput,
+	Input,
+	PoppableTextInput,
+	TextInput,
+} from "../src/input"
 import { makeId } from "../src/_base_elements"
 import userEvent from "@testing-library/user-event"
 
@@ -285,7 +291,7 @@ describe("Testing a Clickable Text Input", () => {
 	it("will continue to be active when changing focus internally", (done) => {
 		const val = makeId()
 		const finisher = jest.fn()
-		const { queryAllByRole, getByText, getByLabelText } = render(
+		const { queryAllByRole, getByText, getByTestId } = render(
 			<ClickableTextInput
 				allowEditing={true}
 				name="Testing Input"
@@ -294,7 +300,7 @@ describe("Testing a Clickable Text Input", () => {
 			/>
 		)
 		getByText(val).click()
-		getByLabelText("Testing Input").focus()
+		getByTestId("clickable-wrapper").focus()
 		waitFor(() => {
 			expect(queryAllByRole("textbox").length).toEqual(1)
 			queryAllByRole("textbox")[0].focus()
@@ -436,6 +442,102 @@ describe("Testing a Checbox Input", () => {
 		userEvent.click(getByTestId(input_test_id))
 		waitFor(() => {
 			expect(changeFn).toHaveBeenCalled()
+			done()
+		})
+	})
+})
+describe("Testing the Poppable Text input", () => {
+	afterEach(() => {
+		cleanup()
+	})
+	it("renders the popper factory", () => {
+		const { getByText } = render(
+			<PoppableTextInput
+				name="Testing"
+				onChange={jest.fn()}
+				popperFactory={(ch) => <button>Hello</button>}
+				value=""
+			/>
+		)
+		expect(getByText("Hello")).toBeInTheDocument()
+	})
+	it("will change on click of popper factory", (done) => {
+		const { getByText, queryAllByRole } = render(
+			<PoppableTextInput
+				enable={true}
+				name="Testing"
+				onChange={jest.fn()}
+				popperFactory={(ch) => <button onClick={ch}>Hello</button>}
+				value=""
+			/>
+		)
+		expect(queryAllByRole("textbox").length).toEqual(0)
+		userEvent.click(getByText("Hello"))
+		waitFor(() => {
+			expect(queryAllByRole("textbox").length).toEqual(1)
+			done()
+		})
+	})
+	it("won't change on click of popper factory if not enabled", (done) => {
+		const { getByText, queryAllByRole } = render(
+			<PoppableTextInput
+				enable={false}
+				name="Testing"
+				onChange={jest.fn()}
+				popperFactory={(ch) => <button onClick={ch}>Hello</button>}
+				value=""
+			/>
+		)
+		expect(queryAllByRole("textbox").length).toEqual(0)
+		userEvent.click(getByText("Hello"))
+		waitFor(() => {
+			expect(queryAllByRole("textbox").length).toEqual(0)
+			done()
+		})
+	})
+	it("will hide the input when focusing outside of the input", (done) => {
+		const { getByText, queryAllByRole } = render(
+			<div>
+				<button>Testing Btn</button>
+				<PoppableTextInput
+					enable={true}
+					name="Testing"
+					onChange={jest.fn()}
+					popperFactory={(ch) => <button onClick={ch}>Hello</button>}
+					value=""
+				/>
+			</div>
+		)
+		expect(queryAllByRole("textbox").length).toEqual(0)
+		userEvent.click(getByText("Hello"))
+		waitFor(() => {
+			expect(queryAllByRole("textbox").length).toEqual(1)
+			userEvent.click(getByText("Testing Btn"))
+		}).then(() => {
+			expect(queryAllByRole("textbox").length).toEqual(0)
+			done()
+		})
+	})
+	it("won't hide the input when focusing inside of the input", (done) => {
+		const { getByText, queryAllByRole } = render(
+			<div>
+				<button>Testing Btn</button>
+				<PoppableTextInput
+					enable={true}
+					name="Testing"
+					onChange={jest.fn()}
+					popperFactory={(ch) => <button onClick={ch}>Hello</button>}
+					value=""
+				/>
+			</div>
+		)
+		expect(queryAllByRole("textbox").length).toEqual(0)
+		userEvent.click(getByText("Hello"))
+		waitFor(() => {
+			expect(queryAllByRole("textbox").length).toEqual(1)
+			userEvent.click(queryAllByRole("textbox")[0])
+		}).then(() => {
+			expect(queryAllByRole("textbox").length).toEqual(1)
 			done()
 		})
 	})

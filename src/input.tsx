@@ -252,15 +252,17 @@ export const PoppableTextInput = (
 					setShowInput(false)
 			}}
 		>
-			<TextInput
-				inline={true}
-				name={`${props.name} Input`}
-				onChange={props.onChange}
-				value={props.value}
-				wrapperProps={{
-					className: `${!showInput ? "is-hidden" : ""} poppable`,
-				}}
-			/>
+			{showInput && (
+				<TextInput
+					inline={true}
+					name={`${props.name} Input`}
+					onChange={props.onChange}
+					value={props.value}
+					wrapperProps={{
+						className: "poppable",
+					}}
+				/>
+			)}
 			{props.popperFactory(() => {
 				if (props.enable) setShowInput(!showInput)
 			})}
